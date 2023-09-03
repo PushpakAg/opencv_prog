@@ -1,0 +1,21 @@
+import cv2
+import numpy as np
+
+sift = cv2.SIFT_create()
+bf  = cv2.BFMatcher(cv2.NORM_L2, crossCheck = True)
+
+img1 = cv2.imread("D:/satellite_img/Screenshot_20230801-071027_Earth.jpg")
+img2 = cv2.imread("D:/satellite_img/Screenshot_20230801-071100_Earth.jpg")
+img11 = cv2.cvtColor(img1,cv2.COLOR_BGR2GRAY)
+img21 = cv2.cvtColor(img2,cv2.COLOR_BGR2GRAY)
+
+key1 , des1 = sift.detectAndCompute(img11,None)
+key2, des2 = sift.detectAndCompute(img21,None)
+
+matches = bf.match(des1, des2)
+matches = sorted(matches, key = lambda x:x.distance)
+
+img3 = cv2.drawMatches(img1,key1,img2,key2,matches[:50],None,flags =2)
+img3 = cv2.resize(img3,(720,480))
+cv2.imshow('SIFT',img3)
+cv2.waitKey(0)
